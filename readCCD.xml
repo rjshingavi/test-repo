@@ -1,0 +1,31 @@
+from xml.dom import minidom, Node
+def scanNodeForTag(node, searchTagname, nodepath, level = 0, print_node = 0):
+    msg = node.__class__.__name__
+    if node.nodeType == Node.ELEMENT_NODE:
+        nodepath += "\\" + node.tagName 
+        if node.tagName == searchTagname:
+            print_node = 1
+        msg += ", tag: " + node.tagName
+        if print_node == 1:
+            print("Node : {} : nodepath = {}, level = {}".format(node.tagName, nodepath, level))
+            #print(" " * level * 4, msg)
+    if node.hasChildNodes:
+        # print(nodepath)
+        for child in node.childNodes:
+            scanNodeForTag(child, searchTagname, nodepath, level + 1, print_node)
+            
+def scanNode(node, nodepath, level = 0, print_node = 0):
+    msg = node.__class__.__name__
+    if node.nodeType == Node.ELEMENT_NODE:
+        nodepath += "\\" + node.tagName 
+        msg += ", tag: " + node.tagName
+        print(" " * level * 4, msg)
+
+    if node.hasChildNodes:
+        for child in node.childNodes:
+            scanNode(child, nodepath, level + 1, print_node)
+
+nodepath = 'root'
+doc = minidom.parse("C:\\PythonWorkSpace\\CCD.xml") 
+scanNodeForTag(doc, 'providerOrganization' , nodepath)
+scanNode(doc, nodepath)
